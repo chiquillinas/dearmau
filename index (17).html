@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Para Mau</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&family=Reenie+Beanie&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    /* =====================================================
+       VARIABLES
+    ===================================================== */
+    :root {
+      --cream:       #f4ede0;
+      --warm-white:  #fdf8f0;
+      --beige:       #e6d8c2;
+      --tan:         #c4b496;
+      --brown:       #7a5f3e;
+      --dark-brown:  #3e2e1e;
+
+      /* BLUE PALETTE — replaces rose throughout */
+      --blue:        #4a7fa5;
+      --blue-mid:    #3567a0;
+      --blue-deep:   #1d3f6b;
+      --blue-soft:   #c2d8ec;
+      --blue-pale:   #e4f0f8;
+
+      --sage:        #7a9e7e;
+      --soft-sage:   #c2d8c4;
+      --yellow:      #e0b84a;
+      --soft-yellow: #f5e4a0;
+      --lavender:    #9e94c8;
+      --soft-lav:    #d8d2f0;
+      --peach:       #d89e78;
+      --soft-peach:  #f4dcc8;
+
+      --tape:        rgba(196,174,140,0.52);
+      --tape-blue:   rgba(74,127,165,0.28);
+      --shadow:      rgba(40,28,14,0.18);
+      --shadow-blue: rgba(29,63,107,0.20);
+    }
+
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+    html { scroll-behavior:smooth; }
+
+    body {
+      background: var(--cream);
+      font-family: 'Lato', sans-serif;
+      color: var(--dark-brown);
+      overflow-x: hidden;
+    }
+
+    /* paper grain */
+    body::after {
+      content:''; position:fixed; inset:0;
+      pointer-events:none; z-index:9998; opacity:0.04;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    /* =====================================================
+       KEYFRAMES
+    ===================================================== */
+    @keyframes float    { 0%,100%{transform:translateY(0) rotate(0deg)} 50%{transform:translateY(-8px) rotate(3deg)} }
+    @keyframes fadeUp   { from{opacity:0;transform:translateY(18px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes bookIn   { from{opacity:0;transform:scale(0.82) rotate(-4deg)} to{opacity:1;transform:scale(1) rotate(0deg)} }
+    @keyframes popIn    { from{opacity:0;transform:scale(0.86) rotate(var(--rot,0deg))} to{opacity:1;transform:scale(1) rotate(var(--rot,0deg))} }
+    @keyframes heartbeat{ 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
+    @keyframes spinSlow { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+    @keyframes scaleIn  { from{opacity:0;transform:scale(0.7)} to{opacity:1;transform:scale(1)} }
+
+    /* =====================================================
+       MUSIC BTN
+    ===================================================== */
+    #music-btn {
+      position:fixed; bottom:22px; right:22px;
+      width:50px; height:50px; border-radius:50%;
+      background:var(--warm-white); border:2px solid var(--tan);
+      box-shadow:3px 3px 10px var(--shadow);
+      cursor:pointer; z-index:1000;
+      display:flex; align-items:center; justify-content:center;
+      font-size:19px; transition:transform 0.3s,box-shadow 0.3s;
+      font-family:'Caveat',cursive; color:var(--dark-brown); font-weight:600;
+    }
+    #music-btn:hover { transform:scale(1.12) rotate(10deg); }
+
+    /* =====================================================
+       NAV
+    ===================================================== */
+    nav {
+      position:fixed; top:0; left:0; right:0; z-index:500;
+      background:rgba(244,237,224,0.92); backdrop-filter:blur(8px);
+      border-bottom:2px solid var(--beige);
+      padding:9px 26px;
+      display:flex; align-items:center; justify-content:space-between;
+      transform:translateY(-100%); transition:transform 0.4s ease;
+    }
+    nav.visible { transform:translateY(0); }
+    .nav-logo {
+      font-family:'Reenie Beanie',cursive; font-size:26px; color:var(--blue-mid);
+      display:flex; align-items:center; gap:10px;
+    }
+    nav ul { display:flex; gap:18px; list-style:none; }
+    nav ul a { font-family:'Caveat',cursive; font-size:16px; color:var(--dark-brown); text-decoration:none; opacity:0.7; transition:opacity 0.2s,color 0.2s; }
+    nav ul a:hover { opacity:1; color:var(--blue-mid); }
+    @media(max-width:600px){ nav ul{display:none;} }
+
+    /* =====================================================
+       TAPE STRIPS & WASHI
+    ===================================================== */
+    .tape {
+      position:absolute;
+      background:var(--tape);
+      border:1px solid rgba(170,148,110,0.3);
+    }
+    .tape-blue {
+      position:absolute;
+      background:var(--tape-blue);
+      border:1px solid rgba(74,127,165,0.3);
+    }
+
+    .washi {
+      position:absolute; top:0; left:0; right:0; height:13px;
+      background:repeating-linear-gradient(90deg,
+        rgba(74,127,165,0.35) 0,rgba(74,127,165,0.35) 28px,
+        rgba(224,184,74,0.38) 28px,rgba(224,184,74,0.38) 56px,
+        rgba(122,158,126,0.38) 56px,rgba(122,158,126,0.38) 84px,
+        rgba(158,148,200,0.38) 84px,rgba(158,148,200,0.38) 112px
+      );
+    }
+    .washi-blue {
+      position:absolute; top:0; left:0; right:0; height:13px;
+      background:repeating-linear-gradient(90deg,
+        rgba(29,63,107,0.4) 0,rgba(29,63,107,0.4) 32px,
+        rgba(74,127,165,0.3) 32px,rgba(74,127,165,0.3) 64px,
+        rgba(194,216,236,0.5) 64px,rgba(194,216,236,0.5) 96px
+      );
+    }
+
+    /* =====================================================
+       STICKER (floating decorations)
+    ===================================================== */
+    .sticker {
+      position:absolute; pointer-events:none;
+      opacity:var(--op,0.55);
+      animation:float var(--dur,5s) ease-in-out infinite;
+      animation-delay:var(--del,0s); z-index:0;
+    }
+
+    /* =====================================================
+       FUTURE LETTER
+
+    /* =====================================================
+       INTRO
+    ===================================================== */
+    #intro {
+      min-height:100vh;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      position:relative; overflow:hidden;
+      background:radial-gradient(ellipse at 50% 44%, #ddeaf8 0%, var(--cream) 68%);
+      padding:40px 20px;
+    }
+
+    /* scattered bg polaroids */
+    .intro-pol {
+      position:absolute; background:white;
+      padding:9px 9px 30px;
+      box-shadow:3px 3px 12px var(--shadow);
+      transform:rotate(var(--rot,0deg));
+      opacity:0.42; pointer-events:none;
+    }
+    .intro-pol .ph {
+      display:flex; align-items:center; justify-content:center;
+      background:linear-gradient(135deg, var(--blue-pale), var(--soft-peach));
+      font-size:0; /* no emoji, just gradient */
+    }
+
+    /* floating dots */
+    .intro-dot {
+      position:absolute; border-radius:50%;
+      background:var(--blue-soft); opacity:0.3;
+      pointer-events:none;
+      animation:float var(--dur,4s) ease-in-out infinite var(--del,0s);
+    }
+
+    .book-cover {
+      background:var(--warm-white);
+      border:3px solid var(--tan);
+      border-radius:4px 18px 18px 4px;
+      padding:52px 46px;
+      max-width:520px; width:100%;
+      box-shadow:8px 8px 0 var(--tan),16px 16px 0 var(--beige),-2px 0 0 var(--brown);
+      position:relative; text-align:center;
+      animation:bookIn 1.2s cubic-bezier(0.22,1,0.36,1) both; z-index:10;
+    }
+    .book-spine {
+      position:absolute; left:-18px; top:0; bottom:0; width:18px;
+      background:linear-gradient(to right, var(--blue-deep), var(--blue));
+      border-radius:4px 0 0 4px;
+    }
+    /* blue spine stripe */
+    .book-spine::after {
+      content:''; position:absolute; top:50%; left:4px;
+      transform:translateY(-50%);
+      width:2px; height:60%;
+      background:rgba(255,255,255,0.25); border-radius:1px;
+    }
+
+    .book-cover .eyebrow {
+      font-family:'Reenie Beanie',cursive; font-size:20px; color:var(--blue);
+      margin-bottom:10px; opacity:0; animation:fadeUp 0.8s 0.6s ease forwards;
+    }
+    .book-cover h1 {
+      font-family:'Playfair Display',serif;
+      font-size:clamp(40px,8vw,60px); color:var(--dark-brown);
+      line-height:1.06; margin-bottom:12px;
+      opacity:0; animation:fadeUp 0.8s 0.9s ease forwards;
+    }
+    .book-cover h1 em { font-style:italic; color:var(--blue-mid); }
+    .book-cover .subtitle {
+      font-family:'Caveat',cursive; font-size:20px; color:var(--brown);
+      margin-bottom:10px; line-height:1.55;
+      opacity:0; animation:fadeUp 0.8s 1.2s ease forwards;
+    }
+    .btn-open {
+      display:inline-block; font-family:'Caveat',cursive; font-size:22px;
+      color:white; background:var(--blue-mid); border:none;
+      padding:14px 38px; border-radius:3px; cursor:pointer;
+      box-shadow:4px 4px 0 var(--blue-deep);
+      transition:transform 0.2s,box-shadow 0.2s; text-decoration:none;
+      opacity:0; animation:fadeUp 0.8s 1.5s ease forwards;
+    }
+    .btn-open:hover { transform:translate(-2px,-2px); box-shadow:7px 7px 0 var(--blue-deep); }
+
+    /* =====================================================
+       SECTION HEADERS
+    ===================================================== */
+    .section-header { text-align:center; margin-bottom:44px; position:relative; z-index:2; }
+    .section-header .lbl {
+      font-family:'Reenie Beanie',cursive; font-size:22px; color:var(--blue);
+      display:block; margin-bottom:6px;
+    }
+    .section-header h2 {
+      font-family:'Playfair Display',serif;
+      font-size:clamp(26px,4.5vw,40px); color:var(--dark-brown);
+    }
+    .section-header h2::after {
+      content:''; display:block; width:54px; height:3px;
+      background:var(--blue-mid); margin:10px auto 0; border-radius:2px;
+    }
+
+    /* =====================================================
+       DIVIDERS
+    ===================================================== */
+    .divider {
+      text-align:center; padding:14px 0 28px;
+      display:flex; align-items:center; justify-content:center; gap:12px;
+    }
+    .divider-line {
+      height:1px; flex:1; max-width:180px;
+      background:linear-gradient(to right, transparent, var(--blue-soft), transparent);
+    }
+    .divider-center {
+      font-family:'Caveat',cursive; font-size:16px; color:var(--blue);
+      opacity:0.7; letter-spacing:8px;
+    }
+
+    /* =====================================================
+       SCATTER ENGINE
+    ===================================================== */
+    .scatter {
+      position:relative; display:flex; flex-wrap:wrap;
+      align-items:flex-start; justify-content:center;
+      gap:0; overflow:visible; padding:28px 16px;
+    }
+    .si {
+      margin:var(--my,12px) var(--mx,14px);
+      position:relative; z-index:var(--z,1);
+      transform:translateY(var(--ty,0px));
+      flex-shrink:0;
+    }
+
+    /* =====================================================
+       POLAROID
+    ===================================================== */
+    .pol {
+      display:inline-block; background:white;
+      padding:11px 11px 42px;
+      box-shadow:4px 4px 16px var(--shadow),0 0 0 1px rgba(0,0,0,0.04);
+      transform:rotate(var(--rot,0deg));
+      transition:transform 0.32s,box-shadow 0.32s;
+      position:relative; cursor:pointer;
+      opacity:0; animation:popIn 0.6s ease forwards;
+      animation-play-state:paused; vertical-align:top;
+    }
+    .pol:hover {
+      transform:rotate(0deg) scale(1.07) translateY(-7px);
+      box-shadow:10px 16px 32px var(--shadow-blue);
+      z-index:50!important;
+    }
+    .pol .ph {
+      width:var(--pw,175px); height:var(--ph,175px);
+      overflow:hidden; display:block;
+    }
+    .pol .ph img { width:100%; height:100%; object-fit:cover; display:block; }
+    /* placeholder gradient when no image */
+    .pol .ph.grad {
+      background:linear-gradient(135deg,var(--c1,var(--blue-pale)),var(--c2,var(--soft-peach)));
+    }
+    /* tape on polaroid */
+    .pt { position:absolute; height:19px; background:var(--tape); border:1px solid rgba(170,148,110,0.22); top:-9px; }
+    .pt-l { width:50px; left:12px; transform:rotate(-5deg); }
+    .pt-r { width:50px; right:12px; transform:rotate(5deg); }
+    .pt-c { width:52px; left:50%; margin-left:-26px; transform:rotate(-1.5deg); }
+    .pt-bl { position:absolute; height:19px; width:48px; background:var(--tape); border:1px solid rgba(170,148,110,0.22); bottom:-9px; left:50%; margin-left:-24px; transform:rotate(2deg); }
+    /* blue tape variant */
+    .pt-b { background:var(--tape-blue); border-color:rgba(74,127,165,0.22); }
+
+    /* =====================================================
+       VIDEO FRAME
+    ===================================================== */
+    .vf {
+      display:inline-block; background:#0f1a2e;
+      padding:6px 6px 32px;
+      box-shadow:5px 5px 18px var(--shadow-blue);
+      transform:rotate(var(--rot,0deg));
+      transition:transform 0.32s,box-shadow 0.32s;
+      position:relative; cursor:pointer; vertical-align:top;
+    }
+    .vf:hover { transform:rotate(0deg) scale(1.04); box-shadow:10px 12px 28px var(--shadow-blue); z-index:50!important; }
+    .vf .vph {
+      width:var(--vw,256px); height:var(--vh,148px);
+      background:#08101e;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      color:var(--blue-soft); gap:10px; cursor:pointer;
+    }
+    .vf .play-btn {
+      width:44px; height:44px; border-radius:50%;
+      border:2px solid var(--blue-soft);
+      display:flex; align-items:center; justify-content:center;
+      font-size:16px; opacity:0.75; transition:opacity 0.2s;
+      color:var(--blue-soft);
+    }
+    .vf .vph:hover .play-btn { opacity:1; }
+    .vf .vtitle { font-family:'Caveat',cursive; font-size:14px; text-align:center; padding:0 12px; opacity:0.65; }
+    .vf iframe { display:none; border:none; }
+    .vf .vlabel { position:absolute; bottom:8px; left:0; right:0; text-align:center; font-family:'Caveat',cursive; font-size:13px; color:var(--blue-soft); opacity:0.7; }
+
+    /* filmstrip holes */
+    .filmrow { display:flex; gap:9px; padding:4px 5px; background:#0f1a2e; }
+    .fh { width:13px; height:13px; background:var(--cream); border-radius:2px; opacity:0.5; flex-shrink:0; }
+
+    /* =====================================================
+       NOTE CARDS
+    ===================================================== */
+    .nc {
+      padding:26px 22px 32px; border-radius:2px;
+      position:relative; box-shadow:4px 4px 14px var(--shadow);
+      transform:rotate(var(--rot,0deg));
+      transition:transform 0.3s,box-shadow 0.3s;
+      opacity:0; animation:popIn 0.6s ease forwards;
+      animation-play-state:paused;
+    }
+    .nc:hover { transform:rotate(0deg) scale(1.03) translateY(-5px); box-shadow:9px 9px 24px var(--shadow-blue); z-index:50!important; }
+    .nc::before {
+      content:''; position:absolute; top:-11px;
+      left:50%; transform:translateX(-50%) rotate(var(--tr,0deg));
+      width:50px; height:19px;
+      background:var(--tape); border:1px solid rgba(170,148,110,0.28);
+    }
+    .nc.tb::before { background:var(--tape-blue); border-color:rgba(74,127,165,0.28); }
+    .nc-from { font-family:'Reenie Beanie',cursive; font-size:26px; margin-bottom:10px; color:var(--blue-deep); }
+    .nc-text { font-family:'Caveat',cursive; font-size:18px; line-height:1.62; color:var(--dark-brown); }
+    .nc-text.ph { opacity:0.36; font-style:italic; }
+    .nc-sig { font-family:'Reenie Beanie',cursive; font-size:20px; margin-top:14px; text-align:right; opacity:0.7; color:var(--blue-mid); }
+
+    .nc-cream  { background:#fdfaf4; }
+    .nc-blue   { background:var(--blue-pale); }
+    .nc-yellow { background:#fef9e4; }
+    .nc-green  { background:#eef5ee; }
+    .nc-lav    { background:#f0eef8; }
+    .nc-peach  { background:var(--soft-peach); }
+    .nc-sky    { background:#e8f4fb; }
+
+    .notes-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(248px,1fr));
+      gap:38px; position:relative; z-index:2;
+      max-width:1020px; margin:0 auto;
+    }
+
+    /* =====================================================
+       SCRAPBOOK PAGES
+    ===================================================== */
+    .sp {
+      position:relative; padding:70px 24px 60px;
+    }
+    .lined {
+      background-image:repeating-linear-gradient(transparent,transparent 27px,rgba(160,140,110,0.1) 27px,rgba(160,140,110,0.1) 28px);
+    }
+
+    /* =====================================================
+       BASKETBALL DECO BLOCKS
+    ===================================================== */
+
+    /* =====================================================
+       FUTURE LETTER
+    ===================================================== */
+    .future-letter {
+      max-width:680px; margin:0 auto;
+      background:var(--warm-white);
+      padding:48px 52px 56px;
+      position:relative; box-shadow:6px 6px 28px var(--shadow);
+      border-radius:2px; transform:rotate(-0.5deg);
+    }
+    .future-letter::before {
+      content:''; position:absolute; top:0; bottom:0; left:0;
+      width:4px; background:linear-gradient(to bottom,var(--blue-mid),var(--blue-soft));
+    }
+    .future-letter p {
+      font-family:'Caveat',cursive; font-size:20px; line-height:1.8;
+      color:var(--dark-brown); margin-bottom:18px;
+    }
+    .future-letter p.ph { opacity:0.34; font-style:italic; }
+    .future-letter .lc { font-family:'Reenie Beanie',cursive; font-size:28px; color:var(--blue-mid); margin-top:28px; }
+    .future-letter .lc.ph { opacity:0.34; font-style:italic; }
+
+    /* lined paper effect inside letter */
+    .future-letter::after {
+      content:''; position:absolute; inset:0; pointer-events:none;
+      background-image:repeating-linear-gradient(transparent,transparent 31px,rgba(74,127,165,0.07) 31px,rgba(74,127,165,0.07) 32px);
+    }
+
+    /* HOPES */
+    .hopes { display:flex; flex-wrap:wrap; gap:12px; justify-content:center; margin-top:42px; max-width:800px; margin-left:auto; margin-right:auto; }
+    .hope {
+      font-family:'Caveat',cursive; font-size:17px;
+      background:var(--warm-white); border:1.5px solid var(--blue-soft);
+      padding:8px 18px; border-radius:20px; color:var(--dark-brown);
+      box-shadow:2px 2px 6px var(--shadow);
+      transform:rotate(var(--rot,0deg)); transition:transform 0.2s,background 0.2s;
+    }
+    .hope:hover { transform:rotate(0deg) scale(1.06); background:var(--blue-pale); }
+
+    /* =====================================================
+       CLOSING
+    ===================================================== */
+    #closing {
+      background:var(--blue-deep); color:var(--cream);
+      text-align:center; padding:80px 20px;
+      position:relative; overflow:hidden;
+    }
+    #closing h2 { font-family:'Playfair Display',serif; font-size:clamp(26px,5vw,44px); margin-bottom:20px; position:relative; }
+    #closing h2 em { font-style:italic; color:var(--blue-soft); }
+    #closing p { font-family:'Caveat',cursive; font-size:20px; opacity:0.8; max-width:500px; margin:0 auto 10px; line-height:1.6; position:relative; }
+    .hearts-row { font-size:26px; letter-spacing:8px; margin-top:28px; animation:heartbeat 1.6s ease-in-out infinite; display:inline-block; position:relative; }
+
+    /* =====================================================
+       REVEAL
+    ===================================================== */
+    .reveal { opacity:0; transform:translateY(22px); transition:opacity 0.85s,transform 0.85s; }
+    .reveal.in { opacity:1; transform:translateY(0); }
+
+    /* =====================================================
+       RESPONSIVE
+    ===================================================== */
+    @media(max-width:700px){
+      .future-letter{padding:30px 24px 36px;}
+      .book-cover{padding:40px 28px;}
+    }
+  </style>
+</head>
+<body>
+
+<audio id="bg-music" loop><source src="YOUR_MUSIC_URL.mp3" type="audio/mpeg"></audio>
+<button id="music-btn" id="music-btn">♪</button>
+
+<!-- ── NAV ── -->
+<nav id="main-nav">
+  <div class="nav-logo">
+    Para Mau
+  </div>
+  <ul>
+    <li><a href="#familia">Mensajes</a></li>
+    <li><a href="#memorias">Memorias</a></li>
+    <li><a href="#futuro">Para el futuro</a></li>
+    <li><a href="#mensajes-extra">Audios</a></li>
+  </ul>
+</nav>
+
+<!-- ════════════════════════════════════════════════
+     INTRO
+════════════════════════════════════════════════ -->
+<section id="intro">
+
+  <!-- background polaroids -->
+  <div class="intro-pol" style="top:6%;left:2%;--rot:-8deg"><div class="ph grad" style="width:100px;height:94px;--c1:#c2d8ec;--c2:#e4f0f8"></div></div>
+  <div class="intro-pol" style="top:12%;right:3%;--rot:7deg"><div class="ph grad" style="width:88px;height:82px;--c1:#e4f0f8;--c2:#f5e4a0"></div></div>
+  <div class="intro-pol" style="bottom:16%;left:4%;--rot:5deg"><div class="ph grad" style="width:104px;height:97px;--c1:#d8d2f0;--c2:#f4dcc8"></div></div>
+  <div class="intro-pol" style="bottom:12%;right:3.5%;--rot:-7deg"><div class="ph grad" style="width:90px;height:86px;--c1:#f5e4a0;--c2:#c2d8ec"></div></div>
+  <div class="intro-pol" style="top:42%;left:0.5%;--rot:10deg;opacity:0.3"><div class="ph grad" style="width:75px;height:70px;--c1:#c2d8ec;--c2:#c2d8c4"></div></div>
+  <div class="intro-pol" style="top:38%;right:1%;--rot:-9deg;opacity:0.3"><div class="ph grad" style="width:80px;height:76px;--c1:#f4dcc8;--c2:#d8d2f0"></div></div>
+
+  <!-- floating dots -->
+  <div class="intro-dot" style="width:10px;height:10px;top:18%;left:24%;--dur:3.8s"></div>
+  <div class="intro-dot" style="width:7px;height:7px;top:28%;right:22%;--dur:4.5s;--del:1s"></div>
+  <div class="intro-dot" style="width:12px;height:12px;bottom:24%;left:20%;--dur:5s;--del:0.5s;background:var(--yellow);opacity:0.25"></div>
+  <div class="intro-dot" style="width:8px;height:8px;bottom:18%;right:24%;--dur:4s;--del:1.5s"></div>
+
+
+
+  <div class="book-cover">
+    <div class="book-spine"></div>
+    <!-- tape on cover -->
+    <div class="tape" style="height:20px;width:70px;top:-10px;left:50%;margin-left:-35px;transform:rotate(-1.5deg)"></div>
+    <div class="tape" style="height:18px;width:55px;bottom:-9px;left:16px;transform:rotate(3deg)"></div>
+    <div class="tape-blue" style="height:18px;width:55px;bottom:-9px;right:16px;transform:rotate(-2deg)"></div>
+
+    <div style="position:relative;z-index:1;text-align:center">
+      <p style="font-family:'Reenie Beanie',cursive;font-size:22px;color:var(--blue);margin-bottom:8px;opacity:0;animation:fadeUp 0.8s 0.6s ease forwards">De tus personas</p>
+      <h1 style="opacity:0;animation:fadeUp 0.8s 0.9s ease forwards"><em>Para Mau</em></h1>
+      <div style="margin-top:32px">
+        <a href="#familia" class="btn-open">Abrir el album</a>
+      </div>
+    </div>
+  </div>
+
+
+</section>
+
+<!-- ════════════════════════════════════════════════
+     SCATTER 1 — after intro
+════════════════════════════════════════════════ -->
+<div class="scatter" style="background:var(--warm-white);padding:44px 16px 22px;position:relative;">
+  <div class="washi"></div>
+
+<div class="si" style="--mx:8px;--my:6px;--z:3;--ty:-14px">
+    <div class="pol" style="--rot:-4deg"><div class="pt pt-l pt-b"></div><div class="ph" style="--pw:175px;--ph:185px"><img src="WhatsApp_Image_2026-05-21_at_16_59_11.jpeg" alt="foto" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;"></div></div>
+  </div>
+  <div class="si" style="--mx:6px;--my:16px;--z:2;--ty:26px">
+    <div class="pol" style="--rot:3.5deg"><div class="pt pt-r"></div><div class="ph" style="--pw:175px;--ph:185px"><img src="WhatsApp_Image_2026-05-21_at_16_59_18.jpeg" alt="foto" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;"></div></div>
+  </div>
+  <div class="si" style="--mx:8px;--my:6px;--z:4;--ty:-8px">
+    <div class="vf" style="--rot:-2.5deg;--vw:232px;--vh:136px" onclick="loadLocalVid(this,'WhatsApp_Video_2026-05-21_at_16_59_03.mp4')">
+      <div class="filmrow"><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div></div>
+      <div class="vph"><div class="play-btn">&#9654;</div><div class="vtitle">Agregar titulo del video</div></div>
+      <iframe allow="autoplay"></iframe>
+      <div class="vlabel">Video</div>
+    </div>
+  </div>
+  <div class="si" style="--mx:6px;--my:12px;--z:1;--ty:34px">
+    <div class="pol" style="--rot:6deg"><div class="pt pt-c"></div><div class="ph" style="--pw:175px;--ph:185px"><img src="WhatsApp_Image_2026-05-21_at_14_22_08__1_.jpeg" alt="foto" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;"></div></div>
+  </div>
+  <div class="si" style="--mx:8px;--my:6px;--z:3;--ty:-18px">
+    <div class="pol" style="--rot:-5.5deg"><div class="pt pt-r pt-b"></div><div class="ph" style="--pw:175px;--ph:185px"><img src="WhatsApp_Image_2026-05-21_at_14_22_08__2_.jpeg" alt="foto" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;"></div></div>
+  </div>
+  <div class="si" style="--mx:8px;--my:8px;--z:2;--ty:20px">
+    <div class="vf" style="--rot:4deg;--vw:212px;--vh:124px" onclick="loadLocalVid(this,'WhatsApp_Video_2026-05-21_at_16_59_05.mp4')">
+      <div class="filmrow"><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div></div>
+      <div class="vph"><div class="play-btn">&#9654;</div><div class="vtitle">Agregar titulo del video</div></div>
+      <iframe allow="autoplay"></iframe>
+      <div class="vlabel">Video</div>
+    </div>
+  </div>
+  <div class="si" style="--mx:6px;--my:4px;--z:3;--ty:-10px">
+    <div class="pol" style="--rot:2deg"><div class="pt pt-l"></div><div class="ph" style="--pw:175px;--ph:185px"><img src="WhatsApp_Image_2026-05-21_at_14_22_08.jpeg" alt="foto" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;"></div></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     SCATTER 2
+════════════════════════════════════════════════ -->
+<div class="scatter" style="background:var(--cream);padding:34px 16px;position:relative;">
+
+  <div class="si" style="--mx:6px;--my:4px;--z:3;--ty:-16px">
+    <div class="pol" style="--rot:5.5deg"><div class="pt pt-l pt-b"></div><div class="ph" style="--pw:175px;--ph:185px"><img src="WhatsApp_Image_2026-05-21_at_16_59_01.jpeg" alt="foto" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;"></div></div>
+  </div>
+  <div class="si" style="--mx:8px;--my:6px;--z:1;--ty:32px">
+    <div class="vf" style="--rot:2deg;--vw:248px;--vh:144px" onclick="loadLocalVid(this,'WhatsApp_Video_2026-05-21_at_16_59_06.mp4')">
+      <div class="filmrow"><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div></div>
+      <div class="vph"><div class="play-btn">&#9654;</div><div class="vtitle">Agregar titulo del video</div></div>
+      <iframe allow="autoplay"></iframe>
+      <div class="vlabel">Video</div>
+    </div>
+  </div>
+  <div class="si" style="--mx:6px;--my:4px;--z:4;--ty:-10px">
+    <div class="pol" style="--rot:-4deg"><div class="pt pt-r"></div><div class="ph grad" style="--pw:172px;--ph:166px;--c1:var(--blue-pale);--c2:var(--soft-yellow)"></div></div>
+  </div>
+
+<div class="si" style="--mx:6px;--my:6px;--z:2;--ty:22px">
+    <div class="pol" style="--rot:2.5deg"><div class="pt pt-c"></div><div class="ph grad" style="--pw:157px;--ph:152px;--c1:var(--soft-peach);--c2:var(--blue-soft)"></div></div>
+  </div>
+  <div class="si" style="--mx:6px;--my:4px;--z:3;--ty:-22px">
+    <div class="pol" style="--rot:-6deg"><div class="pt pt-l pt-b"></div><div class="ph grad" style="--pw:144px;--ph:140px;--c1:var(--soft-lav);--c2:var(--soft-sage)"></div></div>
+  </div>
+  <div class="si" style="--mx:8px;--my:6px;--z:2;--ty:28px">
+    <div class="vf" style="--rot:-4.5deg;--vw:216px;--vh:126px" onclick="loadLocalVid(this,'WhatsApp_Video_2026-05-21_at_16_59_08.mp4')">
+      <div class="filmrow"><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div></div>
+      <div class="vph"><div class="play-btn">&#9654;</div><div class="vtitle">Agregar titulo del video</div></div>
+      <iframe allow="autoplay"></iframe>
+      <div class="vlabel">Video</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     MEGA PHOTO + VIDEO SPREAD
+════════════════════════════════════════════════ -->
+<section class="sp" id="memorias" style="background:var(--warm-white);padding-top:60px;padding-bottom:20px;position:relative;">
+  <div class="washi"></div>
+
+  <div class="section-header reveal">
+    <span class="lbl">Guardados para siempre</span>
+    <h2>Nuestros momentos favoritos</h2>
+  </div>
+
+  <!-- ROW 1 -->
+  <div class="scatter" style="padding:10px 8px;">
+    <div class="si" style="--mx:6px;--my:4px;--z:3;--ty:-18px">
+      <div class="pol" style="--rot:-5deg"><div class="pt pt-l pt-b"></div><div class="ph grad" style="--pw:184px;--ph:178px;--c1:var(--blue-pale);--c2:var(--soft-peach)"></div></div>
+    </div>
+    <div class="si" style="--mx:4px;--my:6px;--z:1;--ty:36px">
+      <div class="pol" style="--rot:4deg"><div class="pt pt-c"></div><div class="ph grad" style="--pw:202px;--ph:196px;--c1:var(--soft-sage);--c2:var(--soft-yellow)"></div></div>
+    </div>
+    <div class="si" style="--mx:6px;--my:8px;--z:2;--ty:8px">
+      <div class="vf" style="--rot:-3deg;--vw:254px;--vh:150px" onclick="loadLocalVid(this,'WhatsApp_Video_2026-05-21_at_16_59_10.mp4')">
+        <div class="filmrow"><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div></div>
+        <div class="vph"><div class="play-btn">&#9654;</div><div class="vtitle">Agregar titulo del video</div></div>
+        <iframe allow="autoplay"></iframe>
+        <div class="vlabel">Video</div>
+      </div>
+    </div>
+    <div class="si" style="--mx:6px;--my:4px;--z:4;--ty:-10px">
+      <div class="pol" style="--rot:2deg"><div class="pt pt-r pt-b"></div><div class="ph grad" style="--pw:174px;--ph:168px;--c1:var(--blue-soft);--c2:var(--soft-lav)"></div></div>
+    </div>
+    <div class="si" style="--mx:4px;--my:6px;--z:3;--ty:30px">
+      <div class="pol" style="--rot:-4deg"><div class="pt pt-l"></div><div class="ph grad" style="--pw:162px;--ph:157px;--c1:var(--soft-peach);--c2:var(--soft-sage)"></div></div>
+    </div>
+    <div class="si" style="--mx:6px;--my:4px;--z:2;--ty:-22px">
+      <div class="pol" style="--rot:6.5deg"><div class="pt pt-c"></div><div class="ph grad" style="--pw:148px;--ph:144px;--c1:var(--soft-yellow);--c2:var(--blue-pale)"></div></div>
+    </div>
+  </div>
+
+
+
+  <!-- ROW 2 -->
+  <div class="scatter" style="padding:8px 8px;">
+    <div class="si" style="--mx:8px;--my:4px;--z:2;--ty:24px">
+      <div class="vf" style="--rot:4deg;--vw:240px;--vh:142px" onclick="loadLocalVid(this,'WhatsApp_Video_2026-05-21_at_16_59_14.mp4')">
+        <div class="filmrow"><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div></div>
+        <div class="vph"><div class="play-btn">&#9654;</div><div class="vtitle">Agregar titulo del video</div></div>
+        <iframe allow="autoplay"></iframe>
+        <div class="vlabel">Video</div>
+      </div>
+    </div>
+    <div class="si" style="--mx:6px;--my:6px;--z:3;--ty:-14px">
+      <div class="pol" style="--rot:-3.5deg"><div class="pt pt-r pt-b"></div><div class="ph grad" style="--pw:179px;--ph:172px;--c1:var(--blue-pale);--c2:var(--soft-sage)"></div></div>
+    </div>
+    <div class="si" style="--mx:6px;--my:4px;--z:1;--ty:40px">
+      <div class="pol" style="--rot:5deg"><div class="pt pt-c"></div><div class="ph grad" style="--pw:194px;--ph:187px;--c1:var(--soft-yellow);--c2:var(--blue-soft)"></div></div>
+    </div>
+    <div class="si" style="--mx:6px;--my:6px;--z:4;--ty:-8px">
+      <div class="pol" style="--rot:-2deg"><div class="pt pt-l pt-b"></div><div class="ph grad" style="--pw:167px;--ph:161px;--c1:var(--soft-lav);--c2:var(--soft-peach)"></div></div>
+    </div>
+    <div class="si" style="--mx:8px;--my:4px;--z:2;--ty:16px">
+      <div class="vf" style="--rot:-5deg;--vw:224px;--vh:132px" onclick="loadLocalVid(this,'WhatsApp_Video_2026-05-21_at_16_59_17.mp4')">
+        <div class="filmrow"><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div></div>
+        <div class="vph"><div class="play-btn">&#9654;</div><div class="vtitle">Agregar titulo del video</div></div>
+        <iframe allow="autoplay"></iframe>
+        <div class="vlabel">Video</div>
+      </div>
+    </div>
+    <div class="si" style="--mx:6px;--my:6px;--z:3;--ty:-26px">
+      <div class="pol" style="--rot:7deg"><div class="pt pt-r"></div><div class="ph grad" style="--pw:152px;--ph:148px;--c1:var(--blue-pale);--c2:var(--soft-sage)"></div></div>
+    </div>
+  </div>
+
+  <!-- ROW 3 -->
+  <div class="scatter" style="padding:8px 8px 20px;">
+    <div class="si" style="--mx:4px;--my:6px;--z:3;--ty:18px">
+      <div class="pol" style="--rot:-7deg"><div class="pt pt-l pt-b"></div><div class="ph grad" style="--pw:164px;--ph:159px;--c1:var(--blue-soft);--c2:var(--soft-yellow)"></div></div>
+    </div>
+    <div class="si" style="--mx:6px;--my:4px;--z:2;--ty:-20px">
+      <div class="pol" style="--rot:3deg"><div class="pt pt-c"></div><div class="ph grad" style="--pw:188px;--ph:182px;--c1:var(--soft-peach);--c2:var(--soft-sage)"></div></div>
+    </div>
+    <div class="si" style="--mx:8px;--my:4px;--z:3;--ty:-12px">
+      <div class="vf" style="--rot:3.5deg;--vw:250px;--vh:146px" onclick="loadLocalVid(this,'WhatsApp_Video_2026-05-21_at_16_59_22.mp4')">
+        <div class="filmrow"><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div></div>
+        <div class="vph"><div class="play-btn">&#9654;</div><div class="vtitle">Agregar titulo del video</div></div>
+        <iframe allow="autoplay"></iframe>
+        <div class="vlabel">Video</div>
+      </div>
+    </div>
+    <div class="si" style="--mx:6px;--my:8px;--z:1;--ty:44px">
+      <div class="pol" style="--rot:-2.5deg"><div class="pt pt-r pt-b"></div><div class="ph grad" style="--pw:174px;--ph:168px;--c1:var(--soft-lav);--c2:var(--blue-pale)"></div></div>
+    </div>
+    <div class="si" style="--mx:6px;--my:4px;--z:4;--ty:-16px">
+      <div class="pol" style="--rot:-4deg"><div class="pt pt-l"></div><div class="ph grad" style="--pw:159px;--ph:154px;--c1:var(--blue-soft);--c2:var(--soft-peach)"></div></div>
+    </div>
+    <div class="si" style="--mx:6px;--my:4px;--z:2;--ty:28px">
+      <div class="pol" style="--rot:5deg"><div class="pt pt-c"></div><div class="ph grad" style="--pw:154px;--ph:150px;--c1:var(--soft-yellow);--c2:var(--soft-lav)"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="divider" style="padding:20px 0 30px;"><div class="divider-line"></div><div class="divider-center">· · ·</div><div class="divider-line"></div></div>
+
+<!-- ════════════════════════════════════════════════
+     EXTRA VIDEO + PHOTO STRIP (dark film)
+════════════════════════════════════════════════ -->
+<div class="scatter" style="background:#1a2a40;padding:48px 16px;position:relative;">
+
+  <div class="si" style="--mx:8px;--my:6px;--z:2;--ty:14px">
+    <div class="vf" style="--rot:-3.5deg;--vw:264px;--vh:155px" onclick="loadLocalVid(this,'WhatsApp_Video_2026-05-21_at_16_59_23.mp4')">
+      <div class="filmrow"><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div></div>
+      <div class="vph"><div class="play-btn">&#9654;</div><div class="vtitle">Agregar titulo del video</div></div>
+      <iframe allow="autoplay"></iframe>
+      <div class="vlabel">Video</div>
+    </div>
+  </div>
+  <div class="si" style="--mx:6px;--my:4px;--z:3;--ty:-14px">
+    <div class="pol" style="--rot:4.5deg"><div class="pt pt-l pt-b"></div><div class="ph grad" style="--pw:169px;--ph:162px;--c1:var(--blue-pale);--c2:var(--soft-sage)"></div></div>
+  </div>
+  <div class="si" style="--mx:8px;--my:6px;--z:1;--ty:32px">
+    <div class="vf" style="--rot:5deg;--vw:244px;--vh:143px" onclick="loadLocalVid(this,'WhatsApp_Video_2026-05-21_at_14_22_39.mp4')">
+      <div class="filmrow"><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div></div>
+      <div class="vph"><div class="play-btn">&#9654;</div><div class="vtitle">Agregar titulo del video</div></div>
+      <iframe allow="autoplay"></iframe>
+      <div class="vlabel">Video</div>
+    </div>
+  </div>
+  <div class="si" style="--mx:6px;--my:6px;--z:4;--ty:-8px">
+    <div class="pol" style="--rot:-5.5deg"><div class="pt pt-r"></div><div class="ph grad" style="--pw:160px;--ph:154px;--c1:var(--soft-lav);--c2:var(--blue-soft)"></div></div>
+  </div>
+  <div class="si" style="--mx:8px;--my:4px;--z:2;--ty:22px">
+    <div class="vf" style="--rot:-2.5deg;--vw:230px;--vh:134px" onclick="loadLocalVid(this,'WhatsApp_Video_2026-05-21_at_14_22_41.mp4')">
+      <div class="filmrow"><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div></div>
+      <div class="vph"><div class="play-btn">&#9654;</div><div class="vtitle">Agregar titulo del video</div></div>
+      <iframe allow="autoplay"></iframe>
+      <div class="vlabel">Video</div>
+    </div>
+  </div>
+  <div class="si" style="--mx:6px;--my:6px;--z:3;--ty:-18px">
+    <div class="pol" style="--rot:6deg"><div class="pt pt-l pt-b"></div><div class="ph grad" style="--pw:154px;--ph:150px;--c1:var(--soft-yellow);--c2:var(--blue-pale)"></div></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     PARA TU FUTURO
+════════════════════════════════════════════════ -->
+<section class="sp" id="futuro" style="background:linear-gradient(180deg,var(--cream) 0%,#deeaf8 100%);text-align:center;padding-top:70px;position:relative;">
+
+  <div class="section-header reveal">
+    <span class="lbl">Para el camino que viene</span>
+    <h2>Para tu futuro</h2>
+  </div>
+
+  <!-- fotos futuro -->
+  <div class="scatter" style="padding:0 8px 36px;justify-content:center;">
+    <div class="si" style="--mx:8px;--my:6px;--z:2;--ty:22px">
+      <div class="pol" style="--rot:-6.5deg"><div class="pt pt-l pt-b"></div><div class="ph grad" style="--pw:146px;--ph:140px;--c1:var(--blue-pale);--c2:var(--soft-peach)"></div></div>
+    </div>
+    <div class="si" style="--mx:8px;--my:6px;--z:1;--ty:12px">
+      <div class="vf" style="--rot:3deg;--vw:224px;--vh:132px" onclick="loadLocalVid(this,'WhatsApp_Video_2026-05-21_at_14_22_42.mp4')">
+        <div class="filmrow"><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div></div>
+        <div class="vph"><div class="play-btn">&#9654;</div><div class="vtitle">Agregar titulo del video</div></div>
+        <iframe allow="autoplay"></iframe>
+        <div class="vlabel">Video</div>
+      </div>
+    </div>
+    <div class="si" style="--mx:8px;--my:6px;--z:3;--ty:-8px">
+      <div class="pol" style="--rot:5.5deg"><div class="pt pt-r pt-b"></div><div class="ph grad" style="--pw:152px;--ph:147px;--c1:var(--soft-sage);--c2:var(--soft-lav)"></div></div>
+    </div>
+    <div class="si" style="--mx:8px;--my:6px;--z:2;--ty:26px">
+      <div class="pol" style="--rot:-3.5deg"><div class="pt pt-l"></div><div class="ph grad" style="--pw:143px;--ph:138px;--c1:var(--soft-yellow);--c2:var(--blue-soft)"></div></div>
+    </div>
+  </div>
+
+  <!-- THE LETTER -->
+  <div class="future-letter reveal" style="text-align:left;margin-bottom:52px;">
+    <p>Mau,</p>
+    <p class="ph">Pon tu texto aqui...</p>
+    <p class="ph">Pon tu texto aqui...</p>
+    <p class="ph">Pon tu texto aqui...</p>
+    <div class="lc ph">— Firma aqui</div>
+  </div>
+
+  <h3 style="font-family:'Reenie Beanie',cursive;font-size:30px;color:var(--blue-mid);margin-bottom:22px;">Lo que te deseamos</h3>
+  <div class="hopes">
+    <span class="hope" style="--rot:-1.5deg">Que viajes mucho</span>
+    <span class="hope" style="--rot:2deg">Que nunca te rindas</span>
+    <span class="hope" style="--rot:-0.5deg">Que ames profundo</span>
+    <span class="hope" style="--rot:1.5deg">Que rias siempre</span>
+    <span class="hope" style="--rot:-2deg">Que alcances tus sueños</span>
+    <span class="hope" style="--rot:1deg">Que brilles donde vayas</span>
+    <span class="hope" style="--rot:-1deg">Que siempre tengas hogar</span>
+    <span class="hope" style="--rot:2.5deg">Que nunca pares de aprender</span>
+    <span class="hope" style="--rot:0.5deg">Que sigas siendo tu</span>
+    <span class="hope" style="--rot:-2deg">Que seas muy feliz</span>
+    <span class="hope" style="--rot:1deg">Que te rodees de amor</span>
+  </div>
+</section>
+
+<!-- final strip -->
+<div class="scatter" style="background:var(--beige);padding:44px 16px;position:relative;">
+  <div class="washi"></div>
+  <div class="si" style="--mx:6px;--my:4px;--z:3;--ty:-16px">
+    <div class="pol" style="--rot:-4.5deg"><div class="pt pt-l pt-b"></div><div class="ph grad" style="--pw:164px;--ph:158px;--c1:var(--blue-pale);--c2:var(--soft-peach)"></div></div>
+  </div>
+  <div class="si" style="--mx:6px;--my:4px;--z:2;--ty:26px">
+    <div class="pol" style="--rot:5.5deg"><div class="pt pt-c"></div><div class="ph grad" style="--pw:182px;--ph:176px;--c1:var(--soft-sage);--c2:var(--soft-yellow)"></div></div>
+  </div>
+  <div class="si" style="--mx:6px;--my:4px;--z:1;--ty:40px">
+    <div class="vf" style="--rot:-3.5deg;--vw:240px;--vh:140px" onclick="loadLocalVid(this,'WhatsApp_Video_2026-05-21_at_14_22_43.mp4')">
+      <div class="filmrow"><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div></div>
+      <div class="vph"><div class="play-btn">&#9654;</div><div class="vtitle">Agregar titulo del video</div></div>
+      <iframe allow="autoplay"></iframe>
+      <div class="vlabel">Video</div>
+    </div>
+  </div>
+  <div class="si" style="--mx:6px;--my:4px;--z:4;--ty:-10px">
+    <div class="pol" style="--rot:3.5deg"><div class="pt pt-r pt-b"></div><div class="ph grad" style="--pw:159px;--ph:154px;--c1:var(--soft-lav);--c2:var(--blue-soft)"></div></div>
+  </div>
+  <div class="si" style="--mx:6px;--my:4px;--z:2;--ty:20px">
+    <div class="pol" style="--rot:-6deg"><div class="pt pt-l"></div><div class="ph grad" style="--pw:149px;--ph:145px;--c1:var(--blue-pale);--c2:var(--soft-sage)"></div></div>
+  </div>
+  <div class="si" style="--mx:8px;--my:4px;--z:3;--ty:8px">
+    <div class="vf" style="--rot:4.5deg;--vw:218px;--vh:128px" onclick="loadLocalVid(this,'WhatsApp_Video_2026-05-21_at_14_22_43.mp4')">
+      <div class="filmrow"><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div></div>
+      <div class="vph"><div class="play-btn">&#9654;</div><div class="vtitle">Agregar titulo del video</div></div>
+      <iframe allow="autoplay"></iframe>
+      <div class="vlabel">Video</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     MENSAJES EXTRA — AUDIOS DE LAS PRIMAS
+════════════════════════════════════════════════ -->
+<section class="sp" id="mensajes-extra" style="background:var(--cream);padding-top:70px;padding-bottom:60px;position:relative;">
+  <div class="washi-blue"></div>
+
+  <div class="section-header reveal">
+    <span class="lbl">Mensajes extra</span>
+    <h2>Mensajes extra</h2>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:36px;justify-content:center;max-width:860px;margin:0 auto;position:relative;z-index:2;">
+
+    <!-- Audio 1 -->
+    <div style="background:var(--warm-white);border:1.5px solid var(--blue-soft);border-radius:16px;padding:32px 36px 28px;box-shadow:4px 4px 18px var(--shadow);transform:rotate(-1.2deg);max-width:340px;width:100%;position:relative;">
+      <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%) rotate(-2deg);width:58px;height:20px;background:var(--tape-blue);border:1px solid rgba(74,127,165,0.28);border-radius:2px;"></div>
+      <p style="font-family:'Reenie Beanie',cursive;font-size:28px;color:var(--blue-deep);margin-bottom:6px;">De tu prima 💙</p>
+      <p style="font-family:'Caveat',cursive;font-size:16px;color:var(--brown);margin-bottom:16px;opacity:0.7;">Un mensaje de voz para ti</p>
+      <audio controls style="width:100%;accent-color:var(--blue-mid);">
+        <source src="WhatsApp_Audio_2026-05-18_at_13_28_42.opus" type="audio/ogg; codecs=opus">
+        <source src="WhatsApp_Audio_2026-05-18_at_13_28_42.opus" type="audio/opus">
+        <source src="WhatsApp_Audio_2026-05-18_at_13_28_42.opus" type="audio/webm">
+      </audio>
+      <p style="font-family:'Caveat',cursive;font-size:13px;color:var(--brown);margin-top:10px;opacity:0.5;text-align:center;">Si no reproduce, abre en Chrome</p>
+    </div>
+
+    <!-- Audio 2 -->
+    <div style="background:var(--blue-pale);border:1.5px solid var(--blue-soft);border-radius:16px;padding:32px 36px 28px;box-shadow:4px 4px 18px var(--shadow);transform:rotate(1.5deg);max-width:340px;width:100%;position:relative;">
+      <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%) rotate(2deg);width:58px;height:20px;background:var(--tape);border:1px solid rgba(170,148,110,0.28);border-radius:2px;"></div>
+      <p style="font-family:'Reenie Beanie',cursive;font-size:28px;color:var(--blue-deep);margin-bottom:6px;">De tu prima 💙</p>
+      <p style="font-family:'Caveat',cursive;font-size:16px;color:var(--brown);margin-bottom:16px;opacity:0.7;">Un mensaje de voz para ti</p>
+      <audio controls style="width:100%;accent-color:var(--blue-mid);">
+        <source src="WhatsApp_Audio_2026-05-18_at_13_28_43.opus" type="audio/ogg; codecs=opus">
+        <source src="WhatsApp_Audio_2026-05-18_at_13_28_43.opus" type="audio/opus">
+        <source src="WhatsApp_Audio_2026-05-18_at_13_28_43.opus" type="audio/webm">
+      </audio>
+      <p style="font-family:'Caveat',cursive;font-size:13px;color:var(--brown);margin-top:10px;opacity:0.5;text-align:center;">Si no reproduce, abre en Chrome</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     CLOSING
+════════════════════════════════════════════════ -->
+<section id="closing">
+  <div style="position:relative;z-index:1">
+    <h2>Te amamos, <em>Mau</em></h2>
+    <p>Felicidades por graduarte.</p>
+    <p>Estamos increiblemente orgullosos de ti.</p>
+    <p style="margin-top:8px;opacity:0.42;font-size:16px">— Tu familia, tu novia, y tus amigos</p>
+    <div style="margin-top:32px;display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap">
+      <span class="hearts-row" style="font-family:'Caveat',cursive;font-size:20px;letter-spacing:6px;color:var(--blue-soft)">Con todo nuestro amor</span>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════
+     JS
+════════════════════════════════════════════════ -->
+<script>
+  /* MUSIC */
+  const musicBtn = document.getElementById('music-btn');
+  const bgMusic  = document.getElementById('bg-music');
+  let playing = false;
+  musicBtn.addEventListener('click', () => {
+    playing ? (bgMusic.pause(), musicBtn.textContent='♪') : (bgMusic.play().catch(()=>{}), musicBtn.textContent='■');
+    playing = !playing;
+  });
+
+  /* NAV */
+  const nav   = document.getElementById('main-nav');
+  const intro = document.getElementById('intro');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('visible', intro.getBoundingClientRect().bottom < 60);
+  }, {passive:true});
+
+  /* SCROLL REVEAL */
+  const revIO = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); revIO.unobserve(e.target); } });
+  }, {threshold:0.1});
+  document.querySelectorAll('.reveal').forEach(el => revIO.observe(el));
+
+  /* LAZY ANIMATION */
+  const lazyIO = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if(e.isIntersecting){
+        setTimeout(() => { e.target.style.animationPlayState = 'running'; }, i * 52);
+        lazyIO.unobserve(e.target);
+      }
+    });
+  }, {threshold:0.04, rootMargin:'0px 0px 80px 0px'});
+  document.querySelectorAll('.pol, .nc').forEach(el => {
+    el.style.animationPlayState = 'paused';
+    lazyIO.observe(el);
+  });
+
+  /* LOCAL VIDEO */
+  function loadLocalVid(frameEl, filename) {
+    const vph    = frameEl.querySelector('.vph');
+    const iframe = frameEl.querySelector('iframe');
+    const w = vph.offsetWidth;
+    const h = vph.offsetHeight;
+    // Replace iframe with a proper video element
+    const vid = document.createElement('video');
+    vid.src = filename;
+    vid.controls = true;
+    vid.autoplay = true;
+    vid.playsInline = true;
+    vid.style.width  = w + 'px';
+    vid.style.height = h + 'px';
+    vid.style.display = 'block';
+    vid.style.objectFit = 'cover';
+    iframe.parentNode.replaceChild(vid, iframe);
+    vph.style.display = 'none';
+  }
+
+  /* INTRO BTN */
+  document.querySelector('.btn-open').addEventListener('click', e => {
+    e.preventDefault();
+    document.querySelector('#familia').scrollIntoView({behavior:'smooth'});
+  });
+</script>
+</body>
+</html>
