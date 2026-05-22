@@ -495,8 +495,8 @@ document.addEventListener('DOMContentLoaded', function() {
 </head>
 <body>
 
-<audio id="bg-music" loop><source src="YOUR_MUSIC_URL.mp3" type="audio/mpeg"></audio>
-<button id="music-btn" id="music-btn">♪</button>
+<audio id="bg-music" loop preload="auto"><source src="file:///Users/valellinas/Downloads/The%20Spins%20Mac%20Miller,%20Empire%20of%20the%20Sun%20(Lyrics).mp3" type="audio/mpeg"></audio>
+<button id="music-btn" aria-label="Reproducir musica" title="Reproducir musica">♪</button>
 
 <!-- ── NAV ── -->
 <nav id="main-nav">
@@ -506,7 +506,6 @@ document.addEventListener('DOMContentLoaded', function() {
   <ul>
     <li><a href="#familia">Mensajes</a></li>
     <li><a href="#memorias">Memorias</a></li>
-    <li><a href="#futuro">Para el futuro</a></li>
     <li><a href="#mensajes-extra">Audios</a></li>
   </ul>
 </nav>
@@ -566,7 +565,7 @@ document.addEventListener('DOMContentLoaded', function() {
   <div class="si" style="--mx:8px;--my:6px;--z:4;--ty:-8px">
     <div class="vf" style="--rot:-2.5deg;--vw:232px;--vh:136px" onclick="loadLocalVid(this,'https://raw.githubusercontent.com/chiquillinas/dearmau/main/WhatsApp%20Video%202026-05-21%20at%2016.59.03.mp4')">
       <div class="filmrow"><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div></div>
-      <div class="vph"><div class="play-btn">&#9654;</div><div class="vtitle">Agregar titulo del video</div></div>
+      <div class="vph"><div class="play-btn">&#9654;</div></div>
       <iframe allow="autoplay"></iframe>
       <div class="vlabel">Video</div>
     </div>
@@ -580,7 +579,7 @@ document.addEventListener('DOMContentLoaded', function() {
   <div class="si" style="--mx:8px;--my:8px;--z:2;--ty:20px">
     <div class="vf" style="--rot:4deg;--vw:212px;--vh:124px" onclick="loadLocalVid(this,'https://raw.githubusercontent.com/chiquillinas/dearmau/main/WhatsApp%20Video%202026-05-21%20at%2016.59.05.mp4')">
       <div class="filmrow"><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div></div>
-      <div class="vph"><div class="play-btn">&#9654;</div><div class="vtitle">Agregar titulo del video</div></div>
+      <div class="vph"><div class="play-btn">&#9654;</div></div>
       <iframe allow="autoplay"></iframe>
       <div class="vlabel">Video</div>
     </div>
@@ -601,25 +600,15 @@ document.addEventListener('DOMContentLoaded', function() {
   <div class="si" style="--mx:8px;--my:6px;--z:1;--ty:32px">
     <div class="vf" style="--rot:2deg;--vw:248px;--vh:144px" onclick="loadLocalVid(this,'https://raw.githubusercontent.com/chiquillinas/dearmau/main/WhatsApp%20Video%202026-05-21%20at%2016.59.06.mp4')">
       <div class="filmrow"><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div></div>
-      <div class="vph"><div class="play-btn">&#9654;</div><div class="vtitle">Agregar titulo del video</div></div>
+      <div class="vph"><div class="play-btn">&#9654;</div></div>
       <iframe allow="autoplay"></iframe>
       <div class="vlabel">Video</div>
     </div>
   </div>
-  <div class="si" style="--mx:6px;--my:4px;--z:4;--ty:-10px">
-    <div class="pol" style="--rot:-4deg"><div class="pt pt-r"></div><div class="ph grad" style="--pw:172px;--ph:166px;--c1:var(--blue-pale);--c2:var(--soft-yellow)"></div></div>
-  </div>
-
-<div class="si" style="--mx:6px;--my:6px;--z:2;--ty:22px">
-    <div class="pol" style="--rot:2.5deg"><div class="pt pt-c"></div><div class="ph grad" style="--pw:157px;--ph:152px;--c1:var(--soft-peach);--c2:var(--blue-soft)"></div></div>
-  </div>
-  <div class="si" style="--mx:6px;--my:4px;--z:3;--ty:-22px">
-    <div class="pol" style="--rot:-6deg"><div class="pt pt-l pt-b"></div><div class="ph grad" style="--pw:144px;--ph:140px;--c1:var(--soft-lav);--c2:var(--soft-sage)"></div></div>
-  </div>
   <div class="si" style="--mx:8px;--my:6px;--z:2;--ty:28px">
     <div class="vf" style="--rot:-4.5deg;--vw:216px;--vh:126px" onclick="loadLocalVid(this,'https://raw.githubusercontent.com/chiquillinas/dearmau/main/WhatsApp%20Video%202026-05-21%20at%2016.59.08.mp4')">
       <div class="filmrow"><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div></div>
-      <div class="vph"><div class="play-btn">&#9654;</div><div class="vtitle">Agregar titulo del video</div></div>
+      <div class="vph"><div class="play-btn">&#9654;</div></div>
       <iframe allow="autoplay"></iframe>
       <div class="vlabel">Video</div>
     </div>
@@ -639,28 +628,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
   <!-- ROW 1 -->
   <div class="scatter" style="padding:10px 8px;">
-    <div class="si" style="--mx:6px;--my:4px;--z:3;--ty:-18px">
-      <div class="pol" style="--rot:-5deg"><div class="pt pt-l pt-b"></div><div class="ph grad" style="--pw:184px;--ph:178px;--c1:var(--blue-pale);--c2:var(--soft-peach)"></div></div>
-    </div>
-    <div class="si" style="--mx:4px;--my:6px;--z:1;--ty:36px">
-      <div class="pol" style="--rot:4deg"><div class="pt pt-c"></div><div class="ph grad" style="--pw:202px;--ph:196px;--c1:var(--soft-sage);--c2:var(--soft-yellow)"></div></div>
-    </div>
     <div class="si" style="--mx:6px;--my:8px;--z:2;--ty:8px">
       <div class="vf" style="--rot:-3deg;--vw:254px;--vh:150px" onclick="loadLocalVid(this,'https://raw.githubusercontent.com/chiquillinas/dearmau/main/WhatsApp%20Video%202026-05-21%20at%2016.59.10.mp4')">
         <div class="filmrow"><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div></div>
-        <div class="vph"><div class="play-btn">&#9654;</div><div class="vtitle">Agregar titulo del video</div></div>
+        <div class="vph"><div class="play-btn">&#9654;</div></div>
         <iframe allow="autoplay"></iframe>
         <div class="vlabel">Video</div>
       </div>
-    </div>
-    <div class="si" style="--mx:6px;--my:4px;--z:4;--ty:-10px">
-      <div class="pol" style="--rot:2deg"><div class="pt pt-r pt-b"></div><div class="ph grad" style="--pw:174px;--ph:168px;--c1:var(--blue-soft);--c2:var(--soft-lav)"></div></div>
-    </div>
-    <div class="si" style="--mx:4px;--my:6px;--z:3;--ty:30px">
-      <div class="pol" style="--rot:-4deg"><div class="pt pt-l"></div><div class="ph grad" style="--pw:162px;--ph:157px;--c1:var(--soft-peach);--c2:var(--soft-sage)"></div></div>
-    </div>
-    <div class="si" style="--mx:6px;--my:4px;--z:2;--ty:-22px">
-      <div class="pol" style="--rot:6.5deg"><div class="pt pt-c"></div><div class="ph grad" style="--pw:148px;--ph:144px;--c1:var(--soft-yellow);--c2:var(--blue-pale)"></div></div>
     </div>
   </div>
 
@@ -671,57 +645,30 @@ document.addEventListener('DOMContentLoaded', function() {
     <div class="si" style="--mx:8px;--my:4px;--z:2;--ty:24px">
       <div class="vf" style="--rot:4deg;--vw:240px;--vh:142px" onclick="loadLocalVid(this,'https://raw.githubusercontent.com/chiquillinas/dearmau/main/WhatsApp%20Video%202026-05-21%20at%2016.59.14.mp4')">
         <div class="filmrow"><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div></div>
-        <div class="vph"><div class="play-btn">&#9654;</div><div class="vtitle">Agregar titulo del video</div></div>
+        <div class="vph"><div class="play-btn">&#9654;</div></div>
         <iframe allow="autoplay"></iframe>
         <div class="vlabel">Video</div>
       </div>
-    </div>
-    <div class="si" style="--mx:6px;--my:6px;--z:3;--ty:-14px">
-      <div class="pol" style="--rot:-3.5deg"><div class="pt pt-r pt-b"></div><div class="ph grad" style="--pw:179px;--ph:172px;--c1:var(--blue-pale);--c2:var(--soft-sage)"></div></div>
-    </div>
-    <div class="si" style="--mx:6px;--my:4px;--z:1;--ty:40px">
-      <div class="pol" style="--rot:5deg"><div class="pt pt-c"></div><div class="ph grad" style="--pw:194px;--ph:187px;--c1:var(--soft-yellow);--c2:var(--blue-soft)"></div></div>
-    </div>
-    <div class="si" style="--mx:6px;--my:6px;--z:4;--ty:-8px">
-      <div class="pol" style="--rot:-2deg"><div class="pt pt-l pt-b"></div><div class="ph grad" style="--pw:167px;--ph:161px;--c1:var(--soft-lav);--c2:var(--soft-peach)"></div></div>
     </div>
     <div class="si" style="--mx:8px;--my:4px;--z:2;--ty:16px">
       <div class="vf" style="--rot:-5deg;--vw:224px;--vh:132px" onclick="loadLocalVid(this,'https://raw.githubusercontent.com/chiquillinas/dearmau/main/WhatsApp%20Video%202026-05-21%20at%2016.59.17.mp4')">
         <div class="filmrow"><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div></div>
-        <div class="vph"><div class="play-btn">&#9654;</div><div class="vtitle">Agregar titulo del video</div></div>
+        <div class="vph"><div class="play-btn">&#9654;</div></div>
         <iframe allow="autoplay"></iframe>
         <div class="vlabel">Video</div>
       </div>
-    </div>
-    <div class="si" style="--mx:6px;--my:6px;--z:3;--ty:-26px">
-      <div class="pol" style="--rot:7deg"><div class="pt pt-r"></div><div class="ph grad" style="--pw:152px;--ph:148px;--c1:var(--blue-pale);--c2:var(--soft-sage)"></div></div>
     </div>
   </div>
 
   <!-- ROW 3 -->
   <div class="scatter" style="padding:8px 8px 20px;">
-    <div class="si" style="--mx:4px;--my:6px;--z:3;--ty:18px">
-      <div class="pol" style="--rot:-7deg"><div class="pt pt-l pt-b"></div><div class="ph grad" style="--pw:164px;--ph:159px;--c1:var(--blue-soft);--c2:var(--soft-yellow)"></div></div>
-    </div>
-    <div class="si" style="--mx:6px;--my:4px;--z:2;--ty:-20px">
-      <div class="pol" style="--rot:3deg"><div class="pt pt-c"></div><div class="ph grad" style="--pw:188px;--ph:182px;--c1:var(--soft-peach);--c2:var(--soft-sage)"></div></div>
-    </div>
     <div class="si" style="--mx:8px;--my:4px;--z:3;--ty:-12px">
       <div class="vf" style="--rot:3.5deg;--vw:250px;--vh:146px" onclick="loadLocalVid(this,'https://raw.githubusercontent.com/chiquillinas/dearmau/main/WhatsApp%20Video%202026-05-21%20at%2016.59.22.mp4')">
         <div class="filmrow"><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div></div>
-        <div class="vph"><div class="play-btn">&#9654;</div><div class="vtitle">Agregar titulo del video</div></div>
+        <div class="vph"><div class="play-btn">&#9654;</div></div>
         <iframe allow="autoplay"></iframe>
         <div class="vlabel">Video</div>
       </div>
-    </div>
-    <div class="si" style="--mx:6px;--my:8px;--z:1;--ty:44px">
-      <div class="pol" style="--rot:-2.5deg"><div class="pt pt-r pt-b"></div><div class="ph grad" style="--pw:174px;--ph:168px;--c1:var(--soft-lav);--c2:var(--blue-pale)"></div></div>
-    </div>
-    <div class="si" style="--mx:6px;--my:4px;--z:4;--ty:-16px">
-      <div class="pol" style="--rot:-4deg"><div class="pt pt-l"></div><div class="ph grad" style="--pw:159px;--ph:154px;--c1:var(--blue-soft);--c2:var(--soft-peach)"></div></div>
-    </div>
-    <div class="si" style="--mx:6px;--my:4px;--z:2;--ty:28px">
-      <div class="pol" style="--rot:5deg"><div class="pt pt-c"></div><div class="ph grad" style="--pw:154px;--ph:150px;--c1:var(--soft-yellow);--c2:var(--soft-lav)"></div></div>
     </div>
   </div>
 </section>
@@ -737,35 +684,26 @@ document.addEventListener('DOMContentLoaded', function() {
   <div class="si" style="--mx:8px;--my:6px;--z:2;--ty:14px">
     <div class="vf" style="--rot:-3.5deg;--vw:264px;--vh:155px" onclick="loadLocalVid(this,'https://raw.githubusercontent.com/chiquillinas/dearmau/main/WhatsApp%20Video%202026-05-21%20at%2016.59.23.mp4')">
       <div class="filmrow"><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div></div>
-      <div class="vph"><div class="play-btn">&#9654;</div><div class="vtitle">Agregar titulo del video</div></div>
+      <div class="vph"><div class="play-btn">&#9654;</div></div>
       <iframe allow="autoplay"></iframe>
       <div class="vlabel">Video</div>
     </div>
-  </div>
-  <div class="si" style="--mx:6px;--my:4px;--z:3;--ty:-14px">
-    <div class="pol" style="--rot:4.5deg"><div class="pt pt-l pt-b"></div><div class="ph grad" style="--pw:169px;--ph:162px;--c1:var(--blue-pale);--c2:var(--soft-sage)"></div></div>
   </div>
   <div class="si" style="--mx:8px;--my:6px;--z:1;--ty:32px">
     <div class="vf" style="--rot:5deg;--vw:244px;--vh:143px" onclick="loadLocalVid(this,'https://raw.githubusercontent.com/chiquillinas/dearmau/main/WhatsApp%20Video%202026-05-21%20at%2014.22.39.mp4')">
       <div class="filmrow"><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div></div>
-      <div class="vph"><div class="play-btn">&#9654;</div><div class="vtitle">Agregar titulo del video</div></div>
+      <div class="vph"><div class="play-btn">&#9654;</div></div>
       <iframe allow="autoplay"></iframe>
       <div class="vlabel">Video</div>
     </div>
-  </div>
-  <div class="si" style="--mx:6px;--my:6px;--z:4;--ty:-8px">
-    <div class="pol" style="--rot:-5.5deg"><div class="pt pt-r"></div><div class="ph grad" style="--pw:160px;--ph:154px;--c1:var(--soft-lav);--c2:var(--blue-soft)"></div></div>
   </div>
   <div class="si" style="--mx:8px;--my:4px;--z:2;--ty:22px">
     <div class="vf" style="--rot:-2.5deg;--vw:230px;--vh:134px" onclick="loadLocalVid(this,'https://raw.githubusercontent.com/chiquillinas/dearmau/main/WhatsApp%20Video%202026-05-21%20at%2014.22.41.mp4')">
       <div class="filmrow"><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div></div>
-      <div class="vph"><div class="play-btn">&#9654;</div><div class="vtitle">Agregar titulo del video</div></div>
+      <div class="vph"><div class="play-btn">&#9654;</div></div>
       <iframe allow="autoplay"></iframe>
       <div class="vlabel">Video</div>
     </div>
-  </div>
-  <div class="si" style="--mx:6px;--my:6px;--z:3;--ty:-18px">
-    <div class="pol" style="--rot:6deg"><div class="pt pt-l pt-b"></div><div class="ph grad" style="--pw:154px;--ph:150px;--c1:var(--soft-yellow);--c2:var(--blue-pale)"></div></div>
   </div>
 </div>
 
@@ -774,39 +712,23 @@ document.addEventListener('DOMContentLoaded', function() {
 ════════════════════════════════════════════════ -->
 <section class="sp" id="futuro" style="background:linear-gradient(180deg,var(--cream) 0%,#deeaf8 100%);text-align:center;padding-top:70px;position:relative;">
 
-  <div class="section-header reveal">
-    <span class="lbl">Para el camino que viene</span>
-    <h2>Para tu futuro</h2>
-  </div>
-
   <!-- fotos futuro -->
   <div class="scatter" style="padding:0 8px 36px;justify-content:center;">
-    <div class="si" style="--mx:8px;--my:6px;--z:2;--ty:22px">
-      <div class="pol" style="--rot:-6.5deg"><div class="pt pt-l pt-b"></div><div class="ph grad" style="--pw:146px;--ph:140px;--c1:var(--blue-pale);--c2:var(--soft-peach)"></div></div>
-    </div>
     <div class="si" style="--mx:8px;--my:6px;--z:1;--ty:12px">
       <div class="vf" style="--rot:3deg;--vw:224px;--vh:132px" onclick="loadLocalVid(this,'https://raw.githubusercontent.com/chiquillinas/dearmau/main/WhatsApp%20Video%202026-05-21%20at%2014.22.42.mp4')">
         <div class="filmrow"><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div></div>
-        <div class="vph"><div class="play-btn">&#9654;</div><div class="vtitle">Agregar titulo del video</div></div>
+        <div class="vph"><div class="play-btn">&#9654;</div></div>
         <iframe allow="autoplay"></iframe>
         <div class="vlabel">Video</div>
       </div>
-    </div>
-    <div class="si" style="--mx:8px;--my:6px;--z:3;--ty:-8px">
-      <div class="pol" style="--rot:5.5deg"><div class="pt pt-r pt-b"></div><div class="ph grad" style="--pw:152px;--ph:147px;--c1:var(--soft-sage);--c2:var(--soft-lav)"></div></div>
-    </div>
-    <div class="si" style="--mx:8px;--my:6px;--z:2;--ty:26px">
-      <div class="pol" style="--rot:-3.5deg"><div class="pt pt-l"></div><div class="ph grad" style="--pw:143px;--ph:138px;--c1:var(--soft-yellow);--c2:var(--blue-soft)"></div></div>
     </div>
   </div>
 
   <!-- THE LETTER -->
   <div class="future-letter reveal" style="text-align:left;margin-bottom:52px;">
     <p>Mau,</p>
-    <p class="ph">Pon tu texto aqui...</p>
-    <p class="ph">Pon tu texto aqui...</p>
-    <p class="ph">Pon tu texto aqui...</p>
-    <div class="lc ph">— Firma aqui</div>
+    <p>Te amamos con toda nuestra alma y nos enorgullece mucho el hombre en que te has convertido, sigue llenandonos de felicidad todos los dias.</p>
+    <div class="lc">att: tus personas</div>
   </div>
 
   <h3 style="font-family:'Reenie Beanie',cursive;font-size:30px;color:var(--blue-mid);margin-bottom:22px;">Lo que te deseamos</h3>
@@ -828,30 +750,18 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- final strip -->
 <div class="scatter" style="background:var(--beige);padding:44px 16px;position:relative;">
   <div class="washi"></div>
-  <div class="si" style="--mx:6px;--my:4px;--z:3;--ty:-16px">
-    <div class="pol" style="--rot:-4.5deg"><div class="pt pt-l pt-b"></div><div class="ph grad" style="--pw:164px;--ph:158px;--c1:var(--blue-pale);--c2:var(--soft-peach)"></div></div>
-  </div>
-  <div class="si" style="--mx:6px;--my:4px;--z:2;--ty:26px">
-    <div class="pol" style="--rot:5.5deg"><div class="pt pt-c"></div><div class="ph grad" style="--pw:182px;--ph:176px;--c1:var(--soft-sage);--c2:var(--soft-yellow)"></div></div>
-  </div>
   <div class="si" style="--mx:6px;--my:4px;--z:1;--ty:40px">
     <div class="vf" style="--rot:-3.5deg;--vw:240px;--vh:140px" onclick="loadLocalVid(this,'https://raw.githubusercontent.com/chiquillinas/dearmau/main/WhatsApp%20Video%202026-05-21%20at%2014.22.43.mp4')">
       <div class="filmrow"><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div></div>
-      <div class="vph"><div class="play-btn">&#9654;</div><div class="vtitle">Agregar titulo del video</div></div>
+      <div class="vph"><div class="play-btn">&#9654;</div></div>
       <iframe allow="autoplay"></iframe>
       <div class="vlabel">Video</div>
     </div>
   </div>
-  <div class="si" style="--mx:6px;--my:4px;--z:4;--ty:-10px">
-    <div class="pol" style="--rot:3.5deg"><div class="pt pt-r pt-b"></div><div class="ph grad" style="--pw:159px;--ph:154px;--c1:var(--soft-lav);--c2:var(--blue-soft)"></div></div>
-  </div>
-  <div class="si" style="--mx:6px;--my:4px;--z:2;--ty:20px">
-    <div class="pol" style="--rot:-6deg"><div class="pt pt-l"></div><div class="ph grad" style="--pw:149px;--ph:145px;--c1:var(--blue-pale);--c2:var(--soft-sage)"></div></div>
-  </div>
   <div class="si" style="--mx:8px;--my:4px;--z:3;--ty:8px">
     <div class="vf" style="--rot:4.5deg;--vw:218px;--vh:128px" onclick="loadLocalVid(this,'https://raw.githubusercontent.com/chiquillinas/dearmau/main/WhatsApp%20Video%202026-05-21%20at%2014.22.44.mp4')">
       <div class="filmrow"><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div><div class="fh"></div></div>
-      <div class="vph"><div class="play-btn">&#9654;</div><div class="vtitle">Agregar titulo del video</div></div>
+      <div class="vph"><div class="play-btn">&#9654;</div></div>
       <iframe allow="autoplay"></iframe>
       <div class="vlabel">Video</div>
     </div>
@@ -923,9 +833,70 @@ document.addEventListener('DOMContentLoaded', function() {
   const musicBtn = document.getElementById('music-btn');
   const bgMusic  = document.getElementById('bg-music');
   let playing = false;
-  musicBtn.addEventListener('click', () => {
-    playing ? (bgMusic.pause(), musicBtn.textContent='♪') : (bgMusic.play().catch(()=>{}), musicBtn.textContent='■');
-    playing = !playing;
+  let musicCtx = null;
+  let musicTimer = null;
+  let musicStep = 0;
+  const musicLoop = [
+    { bass:130.81, notes:[261.63,329.63,392.00] },
+    { bass:164.81, notes:[246.94,329.63,415.30] },
+    { bass:196.00, notes:[293.66,392.00,493.88] },
+    { bass:146.83, notes:[220.00,293.66,349.23] }
+  ];
+
+  function playTone(freq, start, duration, gain, type='sine') {
+    const osc = musicCtx.createOscillator();
+    const amp = musicCtx.createGain();
+    osc.type = type;
+    osc.frequency.value = freq;
+    amp.gain.setValueAtTime(0.0001, start);
+    amp.gain.exponentialRampToValueAtTime(gain, start + 0.04);
+    amp.gain.exponentialRampToValueAtTime(0.0001, start + duration);
+    osc.connect(amp).connect(musicCtx.destination);
+    osc.start(start);
+    osc.stop(start + duration + 0.05);
+  }
+
+  function playInstrumentalStep() {
+    const chord = musicLoop[musicStep % musicLoop.length];
+    const now = musicCtx.currentTime;
+    chord.notes.forEach((note, i) => playTone(note, now + i * 0.08, 1.9, 0.025));
+    playTone(chord.bass, now, 2.1, 0.035, 'triangle');
+    playTone(chord.notes[1] * 2, now + 1.15, 0.65, 0.018);
+    musicStep++;
+  }
+
+  async function startMusic() {
+    const source = bgMusic.querySelector('source');
+    if (source && source.src) {
+      await bgMusic.play();
+      return;
+    }
+    musicCtx = musicCtx || new (window.AudioContext || window.webkitAudioContext)();
+    if (musicCtx.state === 'suspended') await musicCtx.resume();
+    playInstrumentalStep();
+    musicTimer = setInterval(playInstrumentalStep, 2200);
+  }
+
+  function stopMusic() {
+    bgMusic.pause();
+    if (musicTimer) clearInterval(musicTimer);
+    musicTimer = null;
+  }
+
+  musicBtn.addEventListener('click', async () => {
+    if (playing) {
+      stopMusic();
+      musicBtn.textContent = '♪';
+      playing = false;
+      return;
+    }
+    startMusic().then(() => {
+      musicBtn.textContent = '■';
+      playing = true;
+    }).catch(() => {
+      musicBtn.textContent = '♪';
+      playing = false;
+    });
   });
 
   /* NAV */
